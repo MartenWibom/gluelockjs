@@ -19,13 +19,13 @@ class GlueLockManager {
      */
     async init() {
         const locksData = await this.#requestHandler.get(`v1/locks`)
-        for (const lockData of locksData) {
+        this.#locks = locksData.map(lockData => {
             const lockId = lockData.id
             const lock = new GlueLock({ lockId, apiKey: this.#apiKey })
-            this.#locks.push(lock)
-        }
+            return lock
+        })
 
-        return this.locks
+        return this.#locks
     }
 
     get locks() {

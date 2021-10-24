@@ -1,9 +1,11 @@
-// import { create } from 'domain'
-
-// import got from 'got'
 const got = require('got')
 
-// export default ({ apiKey }) => got.extend({
+/**
+ * @description Create pre-configured http request object
+ * @param {object} obj
+ * @param {string} obj.apiKey - Glue API key
+ * @returns {object} HTTP request object
+ */
 const create = ({ apiKey }) => got.extend({
     prefixUrl: 'https://user-api.gluehome.com',
     headers: {
@@ -30,13 +32,9 @@ const create = ({ apiKey }) => got.extend({
                 return next(options)
             }
 
-            // Magic begins - transforms/extra handling I guess
             return (async () => {
                 try {
                     const response = await next(options)
-
-                    // Rate limit for the Response object
-                    // response.rateLimit = getRateLimit(response.headers)
 
                     return response
                 } catch (error) {
@@ -47,11 +45,6 @@ const create = ({ apiKey }) => got.extend({
                         error.name = 'GlueApiError';
                         error.message = `${response.body.message} (${error.response.statusCode})`
                     }
-
-                    // Rate limit for errors
-                    // if (response) {
-                    // 	error.rateLimit = getRateLimit(response.headers)
-                    // }
 
                     throw error
                 }

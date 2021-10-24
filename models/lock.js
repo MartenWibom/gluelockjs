@@ -41,6 +41,10 @@ class GlueLock extends EventEmitter {
         this.#getLockData()
     }
 
+    /**
+     * @description Perform lock/unlock actions
+     * @param {string} action - 'lock' or 'unlock'
+     */
     async #callOperation(action) {
         this.#pollEvent(false)
         const response = await this.#requestHandler.post(`v1/locks/${this.#lockId}/operations`, {
@@ -53,14 +57,24 @@ class GlueLock extends EventEmitter {
         this.#pollEvent(true)
     }
 
+    /**
+     * @description Lock
+     */
     async lock() {
         return this.#callOperation(LOCK.ACTION.LOCK)
     }
 
-    async unlock() {
+    /**
+     * @description Unlock
+     */
+     async unlock() {
         return this.#callOperation(LOCK.ACTION.UNLOCK)
     }
 
+    /**
+     * @description Get current lock data and update object
+     * @returns {Object} Raw lock data
+     */
     async #getLockData() {
         const response = await this.#requestHandler.get(`v1/locks/${this.#lockId}`)
         this.#data = {
@@ -74,6 +88,11 @@ class GlueLock extends EventEmitter {
         return response
     }
 
+    /**
+     * @description Converts events to status
+     * @param {string} event - Lock event
+     * @returns {string} Lock status
+     */
     #convertEventToStatus(event) {
         switch (event) {
             case 'pressAndGo':
@@ -91,10 +110,16 @@ class GlueLock extends EventEmitter {
         }
     }
 
+    /**
+     * @description Get lock status
+     */
     get status() {
         return this.#status
     }
 
+    /**
+     * @description Get lock object data
+     */
     get data() {
         return {
             status: this.#status,
@@ -105,6 +130,12 @@ class GlueLock extends EventEmitter {
         }
     }
 
+    /**
+     * @description Follow up on operation (lock/unlock) until complete, error or timeout
+     * @param {object} object
+     * @param {string} object.operationId - Operation id
+     * @param {string} object.action - Requested action
+     */
     async #followUpOperation({ operationId, action }) {
         const check = async () => {
             const response = await this.#requestHandler.get(`v1/locks/${this.#lockId}/operations/${operationId}`)
@@ -126,6 +157,10 @@ class GlueLock extends EventEmitter {
         }
     }
 
+    /**
+     * @description Enable/disable polling of lock status
+     * @param {boolean} enable - Enable/disable polling
+     */
     #pollEvent(enable) {
         const poll = async () => {
             const result = await this.#getLockData()
@@ -151,7 +186,6 @@ class GlueLock extends EventEmitter {
                     this.#poller = undefined
                 } catch (err) {
                     // console.error('Poll error', err)
-                    // log error
                 }
         }
     }
