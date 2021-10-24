@@ -1,0 +1,16 @@
+{
+    "name": "gluelock",
+    "version": "1.0.0",
+    "description": "Glue Lock module",
+    "main": "index.js",
+    "type": "commonjs",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "Mårten Wibom",
+    "license": "MIT",
+    "dependencies": {
+        "dayjs": "^1.10.7",
+        "got": "^11.8.2"
+    }
+}
