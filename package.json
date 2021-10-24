@@ -1,6 +1,6 @@
 {
     "name": "gluelock",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "description": "Glue Lock module",
     "main": "index.js",
     "type": "commonjs",
@@ -9,6 +9,10 @@
     },
     "author": "Mårten Wibom",
     "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/MartenWibom/gluelockjs"
+    },
     "dependencies": {
         "dayjs": "^1.10.7",
         "got": "^11.8.2"
