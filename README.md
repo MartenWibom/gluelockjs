@@ -27,7 +27,7 @@ curl --request POST 'https://user-api.gluehome.com/v1/api-keys' \
 - GlueLock.lock()
 - GlueLock.unlock()
 
-## Variables
+## Attributes
 - GlueLockManager.locks
 - GlueLock.data
 - GlueLock.status
