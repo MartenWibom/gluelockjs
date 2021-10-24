@@ -1,5 +1,7 @@
 Interface for controlling and getting updates from lock "GlueLock".
 
+[![Node.js Package](https://github.com/MartenWibom/gluelockjs/actions/workflows/npm.js.yml/badge.svg)](https://github.com/MartenWibom/gluelockjs/actions/workflows/npm.js.yml)
+
 # Requirement
 - Gluelock with WiFi module
 - Key owner's mail address and password (for getting API key)
