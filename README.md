@@ -48,7 +48,7 @@ Event data payload
     },
     event: 'localUnlock',
     state: 'completed',
-    status: 'unlocked'
+    status: 'unlocked',
     updated: '2021-10-24T22:24:21+02:00'
 }
 ```
