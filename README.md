@@ -9,7 +9,7 @@ Interface for controlling and getting updates from lock "GlueLock".
 # Get started
 ## Install module
 ```bash
-npm install ha-gluelock
+npm install gluelock
 ```
 
 ## Get API key
