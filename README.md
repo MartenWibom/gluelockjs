@@ -38,7 +38,9 @@ curl --request POST 'https://user-api.gluehome.com/v1/api-keys' \
 - locked
 - unlocked
 
-Event data payload
+## Data
+Data & event data payload
+
 ```javascript
 {
     data: {
