@@ -5,7 +5,10 @@ const createRequest = require('./glue-api')
 const dayjs = require('dayjs')
 const LOCK = require('../constants/lock.constants')
 
-const POLL_INTERVAL = 5 * 1000 // 5 seconds
+const DEFAULT_POLL_INTERVAL = 5 * 1000 // 5 seconds
+const MIN_POLL_INTERVAL = 5 * 1000 // 5 seconds
+
+// const DEFAULT_INFORM_INTERVAL = 1000 * 60 * 10 // 10 minutes
 
 // export default
 class GlueLock extends EventEmitter {
@@ -13,6 +16,7 @@ class GlueLock extends EventEmitter {
 
     #lockId
     #apiKey
+
     #data = {
         status: LOCK.STATUS.UNKNOWN,
         battery: 0,
@@ -28,17 +32,28 @@ class GlueLock extends EventEmitter {
     #updated
     #event
     #followUpTime = 2 * 60 // 2 minutes
-    #poller
 
-    constructor({ lockId, apiKey }) {
+    #settings = {
+        pollInterval: DEFAULT_POLL_INTERVAL
+    }
+
+    constructor({ lockId, apiKey, pollInterval = DEFAULT_POLL_INTERVAL }) {
         super()
         this.#apiKey = apiKey
         this.#lockId = lockId
 
         this.#requestHandler = createRequest({ apiKey: this.#apiKey })
 
+        this.setPollInterval(pollInterval)
+
         this.#pollEvent(true)
         this.#getLockData()
+    }
+
+    setPollInterval(interval) {
+        this.#settings.pollInterval = interval < MIN_POLL_INTERVAL ? MIN_POLL_INTERVAL : interval
+
+        return this
     }
 
     /**
@@ -67,7 +82,7 @@ class GlueLock extends EventEmitter {
     /**
      * @description Unlock
      */
-     async unlock() {
+    async unlock() {
         return this.#callOperation(LOCK.ACTION.UNLOCK)
     }
 
@@ -172,22 +187,17 @@ class GlueLock extends EventEmitter {
                 // Detected status change
                 this.emit(this.#status, this.data)
             }
+            if (this.#poll) {
+                setTimeout(poll, this.#settings.pollInterval)
+            }
         }
 
-        if (enable && !this.#poller) {
-            // Enable polling
-            this.#poller = setInterval(() => poll(), POLL_INTERVAL)
-        } else if (!enable && this.#poller) {
-            // Temporarily disabling poller
-            if (this.#poller)
-                try {
-                    clearInterval(this.#poller)
-                    this.#poller.unref()
-                    this.#poller = undefined
-                } catch (err) {
-                    // console.error('Poll error', err)
-                }
+        // if previously disabled and want to start...then start
+        if (enable && !this.#poll) {
+            setTimeout(poll, this.#settings.pollInterval)
         }
+
+        this.#poll = enable
     }
 }
 
