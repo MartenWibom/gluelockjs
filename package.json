@@ -1,6 +1,6 @@
 {
     "name": "gluelock",
-    "version": "1.0.4",
+    "version": "1.0.5",
     "description": "Glue Lock module",
     "main": "index.js",
     "type": "commonjs",
